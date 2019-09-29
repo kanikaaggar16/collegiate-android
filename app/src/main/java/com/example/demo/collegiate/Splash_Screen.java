@@ -11,11 +11,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class Splash_Screen extends AppCompatActivity {
     private ImageView logo;
 
     long SPLASH_TIMEOUT=4000;
     Thread thread;
+    FirebaseAuth firebaseAuth;
 
 
 /*
@@ -26,14 +30,24 @@ public class Splash_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash__screen);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
         thread= new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
                     Thread.sleep(SPLASH_TIMEOUT);
-                    Intent i = new Intent(Splash_Screen.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
+                    if (firebaseUser != null){
+                        Intent i = new Intent(Splash_Screen.this, course.class);
+                        startActivity(i);
+                        finish();
+                    }else {
+                        Intent i = new Intent(Splash_Screen.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+
 
                 }
                 catch (InterruptedException e)
